@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block extra_head %}
+<script src="{{ STATIC_URL }}js/jquery.formset.js"></script>
+
+ <script type="text/javascript">
+        $(function() {
+            $(".inline.{{ ingredient_form.prefix }}").formset({
+                prefix: "{{ ingredient_form.prefix }}",
+            })
+            $(".inline.{{ instruction_form.prefix }}").formset({
+                prefix: "{{ instruction_form.prefix }}",
+            })
+        })
+    </script>
+{% endblock %}
+{% block meta_title %}Publish Your Room{% endblock %}
+{% block title %}Publish Your Room Information{% endblock %}
+
+{% load mezzanine_tags %}
+
+{% block main %}
+<form method="post">
+<fieldset>{% fields_for form %}</fieldset>
+<fieldset>{% fields_for address_form %}</fieldset>
+<fieldset>{% fields_for checklist_form %}</fieldset>
+<div class="actions">
+    <input class="btn btn-warning btn-large" type="submit" value="Publish a New Room">
+</div>
+
+</form>
+{% endblock %}

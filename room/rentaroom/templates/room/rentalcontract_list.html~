@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load mezzanine_tags rating_tags future %}
+
+{% block meta_title %}{{ title|default:"Home" }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block main %}
+
+{% for contract in object_list %}
+<div class="link-item clearfix">
+    
+        <h2>
+           <a href="{{ contract.get_absolute_url }}"> {{ contract.room_for_rent }}</a>
+            <span class="domain">({{ contract.date_start }})</span>
+        </h2>
+        Rent to <a class="profile" href="{% url "profile" contract.room_renter.username %}">{{ contract.room_renter.username }}</a>
+        {{ contract.publish_date|timesince }} ago|
+        <a class="btn btn-large btn-primary btn-profile" href="{% url "rental_payment_create contract.pk" %}">Rental Payment Creation</a>
+       
+       
+    </div>
+</div>
+{% empty %}
+<p>{{ no_data }}</p>
+{% endfor %}
+
+{% pagination_for object_list "page" "pjax" %}
+
+{% endblock %}

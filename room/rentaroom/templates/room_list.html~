@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% load mezzanine_tags rating_tags future %}
+
+{% block meta_title %}{{ title|default:"Home" }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block main %}
+{% if not profile_user %}{% rating_for link %}{% endif %}
+
+{% endblock %}

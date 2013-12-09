@@ -1,0 +1,130 @@
+from django.db import models
+import datetime
+from mezzanine.core.models import Displayable, Ownable
+from mezzanine.generic.fields import CommentsField, RatingField
+from mezzanine.core.managers import DisplayableManager
+from mezzanine.utils.models import upload_to
+from django.utils.translation import ugettext_lazy as _
+
+from phonenumber_field.modelfields import PhoneNumberField
+
+class RoomForRent(Displayable, Ownable):
+    STATUS_CHOICES = (
+        ('AVAIBALE', ('Available')),
+        ('RENTOUT', ('Rented out')),
+        ('WAITTOCONFIRM', ('Wait to confirm'))
+    )
+    
+    room_status = models.CharField(_('Status'), max_length=40, choices = STATUS_CHOICES, default="AVAIBALE")
+    start_date = models.DateField(_('Start Date'), default=datetime.date.today, null=False)
+    price = models.PositiveIntegerField(_('Price'), max_length=120)
+    comments = CommentsField()
+    rating = RatingField()
+    
+    objects = DisplayableManager()
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ("room_for_rent_detail", (), {"slug": self.slug})
+   
+class Address(models.Model):
+
+    room_for_rent = models.OneToOneField(RoomForRent)
+    floor = models.CharField(_('Floor'), max_length = 20, blank = True)
+    door = models.CharField(_('Door'), max_length = 20, blank = True)
+    street_line = models.CharField(_('Address'), max_length = 100, blank = True)
+    zipcode = models.CharField(_('ZIP code'), max_length = 5, blank = True)
+    city = models.CharField(_('City'), max_length = 100, blank = True)
+    state = models.CharField(_('State'), max_length = 100, blank = True)
+    country = models.CharField(_('Country'), max_length = 100, blank = True)
+
+class CheckList(models.Model):
+    CHECKLIST_CHOICES = (
+        ('GOOD', ('good')),
+        ('BAD', ('bad')),
+        ('NOTAVAIBALE', ('notavailable'))
+    )
+    
+    INCLUDE_CHOICES = (
+        ('INCLUDE', ('included')),
+        ('NOTINCLUDE', ('not included'))
+    )
+    room_for_rent = models.OneToOneField(RoomForRent)
+    internet_status = models.CharField(max_length=40, choices=INCLUDE_CHOICES)
+    HUB_status = models.CharField(max_length=40, choices=INCLUDE_CHOICES)
+    aircon = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    fan = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    tv = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    door_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    lock_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    bed_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    frezzer_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    table_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    chair_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    celling_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    mirror_status = models.CharField(max_length=40, choices=CHECKLIST_CHOICES)
+    
+
+class RentalContract(Displayable):
+    CONTRACT_CHOICES = (
+        ('CREATED', ("Created")),
+        ('CONFIRMED', "Confirmed"),
+        ('DECLINED', "Declined"),
+        ('FINISHED', "Finished")
+    )
+    
+    room_owner = models.ForeignKey("auth.User", related_name = 'landlore')
+    room_renter = models.ForeignKey("auth.User", related_name = 'roomrenter')
+    room_for_rent = models.ForeignKey(RoomForRent)
+    date_start = models.DateField(default=datetime.date.today, null=False)
+    date_end = models.DateField(null=False)
+    rental_fee = models.PositiveIntegerField(max_length=40)
+    internet_fee = models.PositiveIntegerField(blank=True, null=True)
+    hub_fee = models.PositiveIntegerField(blank=True, null=True)
+    contract_status = models.CharField(max_length=40, choices=CONTRACT_CHOICES, default="CREATED")
+    
+    class Meta:
+        unique_together = (('room_owner', 'room_renter'))
+        
+    @models.permalink
+    def get_absolute_url(self):
+        return ("rental_contract_detail", (), {"slug": self.slug})
+    
+    
+class RentalPayment(Displayable):
+    PAYMENT_CHOICES = (
+        ('NOTPAID', ('notpaid')),
+        ('PAID', ('PAID'))
+    )
+    rent_contract = models.ForeignKey(RentalContract)
+    date_start = models.DateField(default=datetime.date.today, null=False)
+    date_end = models.DateField(null=False)
+    rental_fee = models.PositiveIntegerField(blank=False)
+    rental_fee_status = models.CharField(max_length=40, choices=PAYMENT_CHOICES)
+    internet_fee = models.PositiveIntegerField(blank=True, null=True)
+    internet_fee_status = models.CharField(max_length=40, choices=PAYMENT_CHOICES)
+    hub_fee = models.PositiveIntegerField(blank=True, null=True)
+    hub_fee_status = models.CharField(max_length=40, choices=PAYMENT_CHOICES)
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ("rental_payment_detail", (), {"slug": self.slug})
+    
+    
+class Profile(models.Model):
+    
+    user = models.OneToOneField("auth.User")
+    phone_number = PhoneNumberField()
+    ic = models.CharField(max_length=40)
+    ic_photo = models.ImageField(_("Image"),
+        upload_to=upload_to("user.profile", "ic photo"))
+    bio = models.TextField(blank=True)
+    comments = CommentsField()
+    rating = RatingField()
+    
+    def __unicode__(self):
+        return "%s" % (self.user)
+    
+    
+    
+    

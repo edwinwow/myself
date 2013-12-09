@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load mezzanine_tags rating_tags future %}
+
+{% block meta_title %}{{ title|default:"Home" }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block main %}
+
+{% for room in object_list %}
+<div class="link-item clearfix">
+    
+    <div class="link-detail{% if room.rating_sum < 0 %} link-negative{% endif %}">
+        <h2>
+           <a href="{{ room.get_absolute_url }}"> {{ room.title }}</a>
+            <span class="domain">({{ room.price }})</span>
+        </h2>
+        by <a class="profile" href="{% url "profile" room.user.username %}">{{ room.user.username }}</a>
+        {{ room.publish_date|timesince }} ago |
+        <a class="comments" href="{{ room.get_absolute_url }}">{{ room.comments_count }} comment{{ room.comments_count|pluralize }} </a>
+       
+    </div>
+</div>
+{% empty %}
+<p>{{ no_data }}</p>
+{% endfor %}
+
+{% pagination_for object_list "page" "pjax" %}
+
+{% endblock %}

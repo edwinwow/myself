@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block meta_title %}Publish Your Room{% endblock %}
+{% block title %}Publish Your Room Information{% endblock %}
+
+{% load mezzanine_tags %}
+
+{% block main %}
+<form method="post">
+<fieldset>{% fields_for form %}</fieldset>
+<div class="actions">
+    <input class="btn btn-warning btn-large" type="submit" value="Publish a New Room">
+</div>
+
+</form>
+{% endblock %}

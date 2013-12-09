@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load mezzanine_tags rating_tags comment_tags future %}
+
+{% block title %}
+<a href="{{ object.link }}">{{ object.title }}</a>
+{% endblock %}
+
+{% block main %}
+<p> {{ object.room_owner }}</p>
+<p> {{ object.room_renter }}</p>
+<p> {{ object.rental_fee }}</p>
+<p> {{ object.internet_fee }}</p>
+<p> {{ object.hub_fee }}</p>
+<p> {{ object.date_start }}</p>
+<p> {{ object.date_end }}</p>
+<p> {{ object.contract_status }}</p>
+
+{% endblock %}
+

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load comment_tags%}
+
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
+{% block main %}
+<p> {{ object.price }}</p>
+<p>{% rating_for object %} by {{ object.user.username }} {{ object.publish_date|timesince }} ago</p>
+{% comments_for object %}
+{% endblock %}
+

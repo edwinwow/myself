@@ -1,0 +1,15 @@
+from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
+
+
+urlpatterns = patterns("",
+    url("^$",
+        RoomForRentList.as_view(),
+        name="home"),
+    url("^room_for_rent/create/$",
+        login_required(RoomForRentCreate.as_view()),
+        name="room_for_rent_create"),
+    url("^room_for_rent/(?P<slug>.*)/$",
+        RoomForRentDetail.as_view(),
+        name="room_for_rent_detail"),
+)
