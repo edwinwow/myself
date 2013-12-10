@@ -192,6 +192,7 @@ def cancelled(request, pk):
     rental_contract.save()
     return redirect('rental_contract_detail')
     
+@login_required     
 def rentalfeepaied(request, pk):
     rental_payment = get_object_or_404(RentalPayment, pk=pk)
     if rental_payment.renta;_contract.room_owner != request.user:
@@ -200,6 +201,7 @@ def rentalfeepaied(request, pk):
     rental_payment.save()
     return redirect('rental_payment_detail')
     
+@login_required     
 def networkfeepaied(request, pk):
     rental_payment = get_object_or_404(RentalPayment, pk=pk)
     if rental_payment.renta;_contract.room_owner != request.user:
