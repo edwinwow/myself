@@ -166,7 +166,7 @@ class RentalPaymentDetail(DetailView):
  
 @login_required   
 def confirmed(request, pk):
-    rental_contract = get_object_or-404(RentalContract, pk=pk)
+    rental_contract = get_object_or_404(RentalContract, pk=pk)
     if rental_contract.room_renter != request.user:
         return HttpResponse("You dont have right to do it")
     rental_contract.contract_status = 'CONFIRMED'
@@ -175,12 +175,50 @@ def confirmed(request, pk):
 
 @login_required   
 def declined(request, pk):
-    rental_contract = get_object_or-404(RentalContract, pk=pk)
+    rental_contract = get_object_or_404(RentalContract, pk=pk)
     if rental_contract.room_renter != request.user:
         return HttpResponse("You dont have right to do it")
     rental_contract.contract_status = 'DECLINED'
     rental_contract.save()
     return redirect('rental_contract_detail')
+    
+    
+@login_required   
+def cancelled(request, pk):
+    rental_contract = get_object_or_404(RentalContract, pk=pk)
+    if rental_contract.room_renter != request.user:
+        return HttpResponse("You dont have right to do it")
+    rental_contract.contract_status = 'CANCLED'
+    rental_contract.save()
+    return redirect('rental_contract_detail')
+    
+def rentalfeepaied(request, pk):
+    rental_payment = get_object_or_404(RentalPayment, pk=pk)
+    if rental_payment.renta;_contract.room_owner != request.user:
+        return HttpResponse("You dont have right to do it")
+    rental_payment.rental_fee_status = 'PAID'
+    rental_payment.save()
+    return redirect('rental_payment_detail')
+    
+def networkfeepaied(request, pk):
+    rental_payment = get_object_or_404(RentalPayment, pk=pk)
+    if rental_payment.renta;_contract.room_owner != request.user:
+        return HttpResponse("You dont have right to do it")
+    rental_payment.internet_fee_status = 'PAID'
+    rental_payment.save()
+    return redirect('rental_payment_detail')
+    
+def hubfeepaied(request, pk):
+    rental_payment = get_object_or_404(RentalPayment, pk=pk)
+    if rental_payment.renta;_contract.room_owner != request.user:
+        return HttpResponse("You dont have right to do it")
+    rental_payment.hub_fee_status = 'PAID'
+    rental_payment.save()
+    return redirect('rental_payment_detail')
+    
+
+        
+
 
 
 
