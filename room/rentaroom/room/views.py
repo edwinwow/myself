@@ -134,7 +134,21 @@ class RentalContractCreate(CreateView):
     form_class = RentalContractForm
     model = RentalContract
     
-    
+    def get_initial(self, request):
+        
+        # Get the initial dictionary from the superclass method
+        initial = super(YourView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        pk = request.GET.get('pk', '')
+        room_for_rent = get_object_or_404(RoomForRent, pk=pk)
+        initial['room_for_rent'] = room_for_rent.pk
+        initial['room_owner'] = room_for_rent.room_owner
+        initial['rental_fee'] = room_for_rent.rental_fee
+        initial['internet_fee'] = room_for_rent.internet_fee
+        initial['hub_fee'] = room_for_rent.hub_fee
+        return initial
+        
     def form_valid(self, form):
         form.instance.room_owner = self.request.user
         info(self.request, "Rental Contract created")
@@ -148,18 +162,20 @@ class RentalPaymentCreate(CreateView):
     form_class = RentalPaymentForm
     model = RentalPayment
     
-    def get_form(self, request):
+    def get_initial(self, request):
+        
+        # Get the initial dictionary from the superclass method
+        initial = super(YourView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
         pk = request.GET.get('pk', '')
         rental_contract = get_object_or_404(RentalContract, pk=pk)
+        initial['rental_contract'] = rental_contract.pk
+        initial['rental_fee'] = rental_contract.rental_fee
+        initial['internet_fee'] = rental_contract.internet_fee
+        initial['hub_fee'] = rental_contract.hub_fee
+        return initial
         
-        initials = {
-                'rental_contract': rental_contract,
-                'rental_fee': rental_contract.rental_fee,
-                'internet_fee': rental_contract.internet_fee,
-                'hub_fee': rental_contract.hub_fee 
-                }
-        form = form_class(initial=initials)
-        return form
  
 class RentalPaymentDetail(DetailView):
     model = RentalPayment
@@ -209,7 +225,8 @@ def networkfeepaied(request, pk):
     rental_payment.internet_fee_status = 'PAID'
     rental_payment.save()
     return redirect('rental_payment_detail')
-    
+
+@login_required    
 def hubfeepaied(request, pk):
     rental_payment = get_object_or_404(RentalPayment, pk=pk)
     if rental_payment.renta;_contract.room_owner != request.user:
