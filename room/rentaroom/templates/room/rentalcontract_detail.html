@@ -14,6 +14,10 @@
 <p> {{ object.date_start }}</p>
 <p> {{ object.date_end }}</p>
 <p> {{ object.contract_status }}</p>
+{% if user == object.room_renter %}
+<a class="btn btn-large btn-primary btn-profile" {%  "contract_confirmed"  %}">Confirm It</a>
+{% endif %}
+       
 
 {% endblock %}
 
