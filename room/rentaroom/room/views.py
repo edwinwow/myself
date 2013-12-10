@@ -142,11 +142,19 @@ class RentalContractCreate(CreateView):
         initial = initial.copy()
         pk = request.GET.get('pk', '')
         room_for_rent = get_object_or_404(RoomForRent, pk=pk)
+        check_list = CheckList.objetcts.get(RoomForRent_exact=pk)
         initial['room_for_rent'] = room_for_rent.pk
         initial['room_owner'] = room_for_rent.room_owner
         initial['rental_fee'] = room_for_rent.rental_fee
-        initial['internet_fee'] = room_for_rent.internet_fee
-        initial['hub_fee'] = room_for_rent.hub_fee
+        if check_list.internet_fee_status = 'INCLUDED':
+            initial['internet_fee'] = '0'
+        else:
+            initial['internet_fee'] = room_for_rent.internet_fee
+        if check_list.hub_fee_status = 'INCLUDED':
+            initial['hub_fee'] = '0'
+        else:
+            initial['hub_fee'] = room_for_rent.hub_fee
+
         return initial
         
     def form_valid(self, form):
