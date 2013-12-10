@@ -22,6 +22,9 @@ class RoomForRentView(object):
     
 
 class RoomForRentList(RoomForRentView, ListView):
+    """
+    list by publish date
+    """
     
     date_field = "publish_date"
     
@@ -32,14 +35,17 @@ class RoomForRentList(RoomForRentView, ListView):
             return "Newest"
 
 class ExtraContextMixin(object):
+    
+    """
+    show two or more model in one view
+    """
+    
+    extra = {}
 
     def get_context_data(self, **kwargs):
         context = super(ExtraContextMixin, self).get_context_data(**kwargs)
         context.update(self.extra())
         return context
-
-    def extra(self):
-        return dict()
        
 class RoomForRentDetail(ExtraContextMixin, DetailView):
     model = RoomForRent
