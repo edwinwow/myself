@@ -16,7 +16,7 @@
         </h2>
         Rent to <a class="profile" href="{% url "profile" contract.room_renter.username %}">{{ contract.room_renter.username }}</a>
         {{ contract.publish_date|timesince }} ago|
-        <a class="btn btn-large btn-primary btn-profile" href="{% url "rental_payment_create" contract.pk %}">Rental Payment Creation</a>
+        <a class="btn btn-large btn-primary btn-profile" href="{% url "rental_payment_create" contract.id %}">Rental Payment Creation</a>
        
        
     </div>
