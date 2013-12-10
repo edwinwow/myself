@@ -5,6 +5,8 @@ from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.core.managers import DisplayableManager
 from django.utils.translation import ugettext_lazy as _
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 class RoomForRent(Displayable, Ownable):
     STATUS_CHOICES = (
         ('AVAIBALE', ('Available')),
@@ -123,7 +125,7 @@ class RentalPayment(models.Model):
 class Profile(models.Model):
     
     user = models.OneToOneField("auth.User")
-    #phone_number
+    phone_number = PhoneNumberField()
     #ic
     #ic photo
     bio = models.TextField(blank=True)
