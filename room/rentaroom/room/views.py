@@ -146,8 +146,8 @@ class RentalContractCreate(CreateView):
         initial = super(YourView, self).get_initial()
         # Copy the dictionary so we don't accidentally change a mutable dict
         initial = initial.copy()
-        pk = request.GET.get('pk', '')
-        room_for_rent = get_object_or_404(RoomForRent, pk=pk)
+        slug = request.GET.get('slug', '')
+        room_for_rent = get_object_or_404(RoomForRent, slug=slug)
         check_list = CheckList.objetcts.get(RoomForRent_exact=pk)
         initial['room_for_rent'] = room_for_rent.pk
         initial['room_owner'] = room_for_rent.room_owner
@@ -182,8 +182,8 @@ class RentalPaymentCreate(CreateView):
         initial = super(YourView, self).get_initial()
         # Copy the dictionary so we don't accidentally change a mutable dict
         initial = initial.copy()
-        pk = request.GET.get('pk', '')
-        rental_contract = get_object_or_404(RentalContract, pk=pk)
+        slug = request.GET.get('slug', '')
+        rental_contract = get_object_or_404(RentalContract, slug=slug)
         initial['rental_contract'] = rental_contract.pk
         initial['rental_fee'] = rental_contract.rental_fee
         initial['internet_fee'] = rental_contract.internet_fee
