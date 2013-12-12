@@ -35,5 +35,37 @@ def room_for_rent_list(request):
       return JSONResponse(serializer.data, status=201)
     else:
       return JSONResponse(serializer.errors, status=400)
+      
+def room_for_rent_detail(request, pk):
+  
+  """
+  Retrieve, update or delete a code room for rent.
+  """
+  try:
+    room_for_rent = RoomForRent.objects.get(pk=pk)
+  except RoomForRent.DoesNotExist:
+    
+    return HttpResponse(status=404)
+    
+  if request.method == 'GET':
+    serializer = RoomForRentSerializer(room_for_rent)
+    return JSONResponse(serializer.data)
+    
+  elif request.method == 'PUT':
+    data = JSONParser().parse(request)
+    serializer = RoomForRentSerializer(data=data)
+    if serializer.is_valid():
+      serializer.save()
+      return JSONResponse(serializer.data, status=201)
+    else:
+      return JSONResponse(serializer.errors, status=400)
+      
+    
+  elif request.method == 'DELETE':
+    room_for_rent.delete()
+    return HttpResponse(status=204)
+    
+    
+    
     
     
