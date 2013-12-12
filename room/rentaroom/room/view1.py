@@ -70,6 +70,18 @@ def room_for_rent_detail(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
     
     
+class RoomForRentList(generics.ListCreateAPIView):
+  queryset = RoomForRent.objects.all()
+  serializer_class = RoomForRentSerializer
+  
+class RoomForRentDetail(generics.RetrieveUpdateDestroyAPIView):
+  queryset = RoomForRent.objects.all()
+  serializer_class = RoomForRentSerializer
+  
+  
+  
+    
+    
     
     
     
