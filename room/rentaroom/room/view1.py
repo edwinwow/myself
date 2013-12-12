@@ -1,4 +1,7 @@
 from django.http import HttpResponse
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -16,7 +19,7 @@ class JSONResponse(HttpResponse):
     kwargs['content_type'] = 'application/json'
     super(JSONResponse, self).__init__(content, **kwargs)
     
-
+@api_view(['GET', 'POST'])
 def room_for_rent_list(request):
   """
   list all the rooms for rent
@@ -25,17 +28,19 @@ def room_for_rent_list(request):
   if request.method == 'GET':
     room_for_rent = RoomForRent.objects.all
     serializer = RoomForRentSerializer(room_for_rent, many=True)
-    return JSONResponse(serializer.data)
+    return Response(serializer.data)
     
   elif request.method == 'POST':
     data = JSONParser().parse(request)
     serializer = RoomForRentSerializer(data=data)
     if serializer.is_valid():
       serializer.save()
-      return JSONResponse(serializer.data, status=201)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
-      return JSONResponse(serializer.errors, status=400)
-      
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])     
 def room_for_rent_detail(request, pk):
   
   """
@@ -43,27 +48,26 @@ def room_for_rent_detail(request, pk):
   """
   try:
     room_for_rent = RoomForRent.objects.get(pk=pk)
-  except RoomForRent.DoesNotExist:
+  except Response(status=status.HTTP_404_NOT_FOUND)
     
-    return HttpResponse(status=404)
     
   if request.method == 'GET':
     serializer = RoomForRentSerializer(room_for_rent)
-    return JSONResponse(serializer.data)
+    return Response(serializer.data)
     
   elif request.method == 'PUT':
     data = JSONParser().parse(request)
     serializer = RoomForRentSerializer(data=data)
     if serializer.is_valid():
       serializer.save()
-      return JSONResponse(serializer.data, status=201)
+      return Response(serializer.data)
     else:
-      return JSONResponse(serializer.errors, status=400)
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST
       
     
   elif request.method == 'DELETE':
     room_for_rent.delete()
-    return HttpResponse(status=204)
+    return Response(status=status.HTTP_204_NO_CONTENT)
     
     
     
