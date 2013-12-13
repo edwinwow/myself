@@ -69,6 +69,42 @@ def room_for_rent_detail(request, pk):
     room_for_rent.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
     
+@api_view(['GET', 'POST'])
+def rental_contract_list(request):
+  """
+  list all the rental contract under a person
+  """
+  
+  if request.method == 'GET':
+    room_for_rent = RoomForRent.objects.all(room_owner=request.user)
+    serializer = RoomForRentSerializer(room_for_rent, many=True)
+    return Response(serializer.data)
+    
+  elif request.method == 'POST':
+    data = JSONParser().parse(request)
+    serializer = RoomForRentSerializer(data=data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
+@api_view(['GET', 'POST'])
+def rental_contract_list_for_renter(request):
+  
+  """
+  list all the rental contract under a renter
+  
+  """
+  
+  if request.method == 'GET':
+    room_for_rent = RoomForRent.objects.filter(room_renter=request.user)
+    serializer = RoomForRentSerializer(room_for_rent, many=True)
+    return Response(serializer.data)
+    
+    
+  
+    
     
   
   
