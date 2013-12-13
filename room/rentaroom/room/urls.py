@@ -33,7 +33,6 @@ urlpatterns = patterns("",
     url("^rental_contract/((?P<pk>\d+)/rental_payment_create/$",
         login_required(RentalPaymentCreate.as_view()),
         name="rental_payment_create"),
-    url(r'^rental_payment/(?P<pk>\d+)/confirmed/$', confirmed, name='rental_contract_confirmed'),
     
     url("^rental_contract/((?P<pk>\d+)/confirm$",
         view.confirmed,
