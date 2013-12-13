@@ -53,7 +53,20 @@ class RoomForRentDetail(ExtraContextMixin, DetailView):
     def extra(self):
         extra=Address.objects.all
         return dict(extra=extra)
-    
+
+
+def room_for_rent_detail(request, pk, template_name="room/roomforrent_detail.html"):
+    ctx = {}
+    room_for_rent = get_object_or_404(RoomForRent, pk=pk)
+    ctx['room_for_rent'] = room_for_rent
+    ctx['title'] = room_for_rent.title
+    ctx['description'] = room_for_rent.description
+    ctx['price'] = room_for_rent.price
+    ctx['start_date'] = room_for_rent.start_date
+    ctx['room_owner'] = room_for_rent.user
+    check_list = CheckList.objects.get(room_for_rent_pk=pk)
+    ctx[]
+    return render(request, template_name, ctx)
     
 class RoomForRentCreate(CreateView):
 
