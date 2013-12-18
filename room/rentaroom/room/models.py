@@ -23,9 +23,6 @@ class RoomForRent(Displayable, Ownable):
     
     objects = DisplayableManager()
     
-    @models.permalink
-    def get_absolute_url(self):
-        return ("room_for_rent_detail", (), {"slug": self.slug})
    
 class Address(models.Model):
 
@@ -86,9 +83,7 @@ class RentalContract(Displayable):
     class Meta:
         unique_together = (('room_owner', 'room_renter'))
         
-    @models.permalink
-    def get_absolute_url(self):
-        return ("rental_contract_detail", (), {"slug": self.slug})
+
     
     
 class RentalPayment(Displayable):
@@ -106,9 +101,6 @@ class RentalPayment(Displayable):
     hub_fee = models.PositiveIntegerField(blank=True, null=True)
     hub_fee_status = models.CharField(max_length=40, choices=PAYMENT_CHOICES)
     
-    @models.permalink
-    def get_absolute_url(self):
-        return ("rental_payment_detail", (), {"slug": self.slug})
     
     
 class Profile(models.Model):
