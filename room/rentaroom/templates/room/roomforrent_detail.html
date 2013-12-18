@@ -13,7 +13,7 @@
 <p> {{ object.price }}</p>
 <p> {{ object.start_date }}</p>
 <p> {{ object.description }}</p>
-<a class="btn btn-large btn-primary btn-profile" href="{% url "rental_contract_create"  %}">Rental Contract Creation</a>
+<a class="btn btn-large btn-primary btn-profile" href="{% url "rental_contract_create" object.id  %}">Rental Contract Creation</a>
 <p>{% rating_for object %} by {{ object.user.username }} {{ object.publish_date|timesince }} ago</p>
 {% comments_for object %}
 {% endblock %}
